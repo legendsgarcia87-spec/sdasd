@@ -3,52 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <title>Calculadora de IMC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS + Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-  <div class="container mt-5">
-    <div class="card shadow">
-      <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Calculadora de IMC</h4>
-      </div>
-      <div class="card-body">
-        <form id="imcForm">
-          <div class="mb-3">
-            <label for="peso" class="form-label">Peso (kg)</label>
-            <input type="number" class="form-control" id="peso" required>
+<body class="bg-gradient bg-light">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-lg">
+          <div class="card-header bg-success text-white text-center">
+            <h4><i class="bi bi-heart-pulse-fill me-2"></i>Calculadora de IMC</h4>
           </div>
-          <div class="mb-3">
-            <label for="altura" class="form-label">Altura (m)</label>
-            <input type="number" step="0.01" class="form-control" id="altura" required>
+          <div class="card-body">
+            <form id="imcForm" novalidate>
+              <div class="mb-3">
+                <label for="peso" class="form-label">Peso (kg)</label>
+                <input type="number" class="form-control" id="peso" placeholder="Ex: 70" required>
+              </div>
+              <div class="mb-3">
+                <label for="altura" class="form-label">Altura (m)</label>
+                <input type="number" step="0.01" class="form-control" id="altura" placeholder="Ex: 1.75" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-calculator-fill me-1"></i>Calcular IMC
+              </button>
+            </form>
+            <div class="mt-4" id="resultado"></div>
           </div>
-          <button type="submit" class="btn btn-success">Calcular IMC</button>
-        </form>
-        <div class="mt-4" id="resultado"></div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Script de cálculo -->
   <script>
     document.getElementById('imcForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const peso = parseFloat(document.getElementById('peso').value);
       const altura = parseFloat(document.getElementById('altura').value);
+      const resultado = document.getElementById('resultado');
+
+      if (!peso || !altura || altura <= 0) {
+        resultado.innerHTML = `<div class="alert alert-warning">Por favor, insira valores válidos.</div>`;
+        return;
+      }
+
       const imc = peso / (altura * altura);
       let classificacao = '';
+      let cor = 'info';
 
       if (imc < 18.5) {
         classificacao = 'Abaixo do peso';
+        cor = 'warning';
       } else if (imc < 24.9) {
         classificacao = 'Peso normal';
+        cor = 'success';
       } else if (imc < 29.9) {
         classificacao = 'Sobrepeso';
+        cor = 'warning';
       } else {
         classificacao = 'Obesidade';
+        cor = 'danger';
       }
 
-      document.getElementById('resultado').innerHTML = `
-        <div class="alert alert-info">
-          Seu IMC é <strong>${imc.toFixed(2)}</strong> — ${classificacao}
+      resultado.innerHTML = `
+        <div class="alert alert-${cor}">
+          <strong>IMC:</strong> ${imc.toFixed(2)}<br>
+          <strong>Classificação:</strong> ${classificacao}
         </div>
       `;
     });
