@@ -1,0 +1,1 @@
+ta lendo pq?
